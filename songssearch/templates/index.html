@@ -1,0 +1,57 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<script type="text/javascript" >
+function back()
+{
+history.go(-1);
+}
+
+function showResult(text)
+{
+
+if (window.XMLHttpRequest)
+{// code for IE7+, Firefox, Chrome, Opera, Safari
+xmlhttp=new XMLHttpRequest();
+}
+else
+{// code for IE6, IE5
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function()
+{
+if (xmlhttp.readyState==4 && xmlhttp.status==200)
+{
+document.getElementById("results").innerHTML=xmlhttp.responseText;
+}
+}
+xmlhttp.open("GET",document.URL+"search/?text="+text,true);
+xmlhttp.send();
+}
+
+
+</script>
+</head>
+<body>
+
+<form action="." method="post">
+{% csrf_token %}
+<input type="button" value="Back" onclick="back()">
+ 
+    <input type="text" name="songtitle" id="songtitle" onkeyup="showResult(this.value)" />
+
+<input type="submit" value="Submit" />
+
+</form>
+<div id="results">
+{% if song_list.count %}
+{% for song in song_list %}
+<h3> {{ song.title }} </h3>
+{% endfor %}
+{% else %}
+{{ song_list|safe }}
+{% endif %}
+</div>
+</body>
+</html>
